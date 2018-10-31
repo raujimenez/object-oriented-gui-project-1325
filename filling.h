@@ -1,5 +1,5 @@
-#ifndef Filling_H
-#define Filling_H
+#ifndef FILLING_H
+#define FILLING_H
 enum class Filling
 {
     Unfilled,
