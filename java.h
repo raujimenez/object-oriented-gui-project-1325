@@ -1,5 +1,6 @@
-#ifndef DONUT_H
-#define DONUT_H
+#ifndef JAVA_H
+#define JAVA_H
+#include <vector>
 #include "product.h"
 #include "shot.h"
 
@@ -15,6 +16,6 @@ class Java : public Product
     int darkeness();
     std::vector<Shot> shots();
     virtual std::string to_string() override;
-}
+};
 
 #endif
