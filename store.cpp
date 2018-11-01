@@ -13,10 +13,10 @@ void Store::add_product(Product *product)
 }
 int Store::number_of_products()
 {
-    return products().size();
+    return _products.size();
 }
 
 std::string Store::product_to_string(int product)
 {
-    return products()[product]->to_string();
+    return _products[product]->to_string();
 }
