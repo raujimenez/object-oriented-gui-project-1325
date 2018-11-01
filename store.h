@@ -3,17 +3,19 @@
 #include "product.h"
 #include "vector"
 
-class Store{
-    public:
-        Store(std::string name);
-        std::string name();
-        std::vector<Product*> products();
-        void add_product(Product* product);
-        int number_of_products();
-        std::string product_to_string(int product);
-    private:
-        std::string _name;
-        std::vector<Product*> _products;
+class Store
+{
+  public:
+    Store(std::string name);
+    std::string name();
+    std::vector<Product *> products();
+    void add_product(Product *product);
+    int number_of_products();
+    std::string product_to_string(int product);
+
+  private:
+    std::string _name;
+    std::vector<Product *> _products;
 };
 
 #endif
