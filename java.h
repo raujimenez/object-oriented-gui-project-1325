@@ -7,13 +7,13 @@
 class Java : public Product
 {
   protected:
-    int _darkeness;
+    int _darkness;
     std::vector<Shot> _shots;
 
   public:
     Java(std::string name, double price, double cost, int darkness);
     void add_shot(Shot shot);
-    int darkeness();
+    int darkness();
     std::vector<Shot> shots();
     std::string to_string() override;
 };
