@@ -66,13 +66,13 @@ std::string Java::to_string()
             break;
         }
     }
-    shots_string = "\n\t\tNone = " + std::to_string(shot_quantity[0]) +
-                   "\n\t\tChocolate = " + std::to_string(shot_quantity[1]) +
-                   "\n\t\tVanilla = " + std::to_string(shot_quantity[2]) +
-                   "\n\t\tPeppermint = " + std::to_string(shot_quantity[3]) +
-                   "\n\t\tHazelnut = " + std::to_string(shot_quantity[4]);
+    shots_string = "None = " + std::to_string(shot_quantity[0]) +
+                   "\n\t\t    Chocolate = " + std::to_string(shot_quantity[1]) +
+                   "\n\t\t    Vanilla = " + std::to_string(shot_quantity[2]) +
+                   "\n\t\t    Peppermint = " + std::to_string(shot_quantity[3]) +
+                   "\n\t\t    Hazelnut = " + std::to_string(shot_quantity[4]);
 
     return _name + " $" + std::to_string(_price) + " $" + std::to_string(_cost) +
-           "\n\t Darkeness: " + darkness_string +
-           "\n\t Shots: " + shots_string;
+           "\n\tDarkeness: " + darkness_string +
+           "\n\tShots: " + shots_string;
 }
