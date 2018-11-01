@@ -1,6 +1,8 @@
 #ifndef STORE_H
 #define STORE_H
 #include "product.h"
+#include "java.h"
+#include "donut.h"
 #include "vector"
 
 class Store

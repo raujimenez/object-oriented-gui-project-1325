@@ -7,7 +7,7 @@ class Mainwin : public Gtk::Window
 {
   public:
     Mainwin();
-    ~Mainwin();
+    //~Mainwin();
 
   protected:
     void on_quit_click();
