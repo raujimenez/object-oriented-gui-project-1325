@@ -16,7 +16,7 @@ class Donut : public Product
     Frosting frosting();
     bool sprinkles();
     Filling filling();
-    virtual std::string to_string() override;
+    std::string to_string() override;
 }
 
 #endif

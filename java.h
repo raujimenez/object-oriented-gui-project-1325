@@ -15,7 +15,7 @@ class Java : public Product
     void add_shot(Shot shot);
     int darkeness();
     std::vector<Shot> shots();
-    virtual std::string to_string() override;
+    std::string to_string() override;
 };
 
 #endif
