@@ -13,7 +13,7 @@ class Store{
         std::string product_to_string(int product);
     private:
         std::string _name;
-        std::vector<Product> _products;
+        std::vector<Product*> _products;
 };
 
 #endif
