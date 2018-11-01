@@ -13,7 +13,7 @@ std::vector<Shot> Java::shots()
 
 void Java::add_shot(Shot shot)
 {
-    return shots().push_back(shot);
+    return _shots.push_back(shot);
 }
 
 std::string Java::to_string()
