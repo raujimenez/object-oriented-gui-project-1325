@@ -1,6 +1,9 @@
 #include "java.h"
 
-Java::Java(std::string name, double price, double cost, int darkness) : Product(name, price, cost), _darkness{darkness} {}
+Java::Java(std::string name, double price, double cost, int darkness) : Product(name, price, cost), _darkness{darkness}
+{
+    _shots.push_back(Shot::None);
+}
 
 int Java::darkness()
 {
@@ -13,13 +16,13 @@ std::vector<Shot> Java::shots()
 
 void Java::add_shot(Shot shot)
 {
-    return _shots.push_back(shot);
+    _shots.push_back(shot);
 }
 
 std::string Java::to_string()
 {
     std::string darkness_string;
-    switch (darkness())
+    switch (_darkness)
     {
     case (1):
         darkness_string = "Blonde";
@@ -41,25 +44,25 @@ std::string Java::to_string()
         break;
     }
     std::string shots_string;
-    std::vector<int> shot_quantity; //count how many of each shots are inputted
-    for (int i{0}; i < shots().size(); ++i)
+    std::vector<int> shot_quantity{0,0,0,0,0}; //count how many of each shots are inputted
+    for (int i{0}; i < _shots.size(); ++i)
     {
-        switch (shots()[i])
+        switch (_shots[i])
         {
         case (Shot::None):
-            shot_quantity[0]++;
+            shot_quantity[0] += 1;
             break;
         case (Shot::Chocolate):
-            shot_quantity[1]++;
+            shot_quantity[1] += 1;
             break;
         case (Shot::Vanilla):
-            shot_quantity[2]++;
+            shot_quantity[2] += 1;
             break;
         case (Shot::Peppermint):
-            shot_quantity[3]++;
+            shot_quantity[3] += 1;
             break;
         case (Shot::Hazelnut):
-            shot_quantity[4]++;
+            shot_quantity[4] += 1;
             break;
         }
     }
@@ -69,7 +72,7 @@ std::string Java::to_string()
                    "\n\t\tPeppermint = " + std::to_string(shot_quantity[3]) +
                    "\n\t\tHazelnut = " + std::to_string(shot_quantity[4]);
 
-    return name() + " $" + std::to_string(price()) + " $" + std::to_string(cost()) +
+    return _name + " $" + std::to_string(_price) + " $" + std::to_string(_cost) +
            "\n\t Darkeness: " + darkness_string +
            "\n\t Shots: " + shots_string;
 }
