@@ -14,6 +14,8 @@ protected:
   void on_view_all_click();
   void on_create_coffee_click();
   void on_create_donut_click();
+  void on_create_customer_click();
+  void on_list_customer_click();
 
 private:
   Store _store;
