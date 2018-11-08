@@ -17,6 +17,7 @@ public:
   void add_customer(Customer person);
   int number_of_customers();
   std::string customer_to_string(int customer);
+
 private:
   std::string _name;
   std::vector<Product *> _products;
