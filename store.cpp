@@ -20,3 +20,16 @@ std::string Store::product_to_string(int product)
 {
     return _products[product]->to_string();
 }
+
+void Store::add_customer(Customer person)
+{
+    _customers.push_back(person);
+}
+int Store::number_of_customers()
+{
+    return _customers.size();
+}
+std::string Store::customer_to_string(int customer)
+{
+    return _customers[customer].to_string();
+}
