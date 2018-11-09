@@ -182,9 +182,10 @@ void Mainwin::on_create_coffee_click()
                 shotty->add_button("Add", 2);
                 shotty->show_all();
 
-                int result_shot = shotty->run();
+                int result_shot = 3;
                 while (result_shot != 1 && result_shot != 0)
                 {
+                    result_shot = shotty->run();
                     int shot_selected = c_shotty.get_active_row_number();
                     switch (shot_selected)
                     {
