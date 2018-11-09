@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <time.h>
+
 Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
 {
 
@@ -48,7 +49,10 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     Gtk::MenuItem *menuitem_createdonut = Gtk::manage(new Gtk::MenuItem("_Donut", true));
     menuitem_createdonut->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_create_donut_click));
     createmenu->append(*menuitem_createdonut);
-
+    //Create new: create customer
+    Gtk::MenuItem *menuitem_createcustomer = Gtk::manage(new Gtk::MenuItem("_Customer", true));
+    menuitem_createcustomer->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_create_customer_click));
+    createmenu->append(*menuitem_createcustomer);
     vbox->show_all();
 }
 
@@ -61,7 +65,7 @@ void Mainwin::on_view_all_click()
     std::string view_string = "List of Products from " + _store.name() + ":\n";
     for (int i{0}; i < _store.number_of_products(); i++)
         view_string += _store.product_to_string(i) + "\n";
-    
+
     Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(view_string));
     view_all->set_transient_for(*this);
     view_all->run();
@@ -154,4 +158,56 @@ void Mainwin::on_create_donut_click()
     }
     auto transformer = (new Donut(names[rand() % names.size()], prices[rand() % prices.size()], costs[rand() % costs.size()], frosting, sprinkles, filling));
     _store.add_product(transformer);
+}
+
+void Mainwin::on_create_customer_click()
+{
+    Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Create customer"));
+    dialog->set_transient_for(*this);
+
+    //name
+    Gtk::HBox b_name;
+    Gtk::Label l_name{"Name:"};
+    l_name.set_width_chars(15);
+    b_name.pack_start(l_name, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_name;
+    e_name.set_max_length(50);
+    b_name.pack_start(e_name, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_name, Gtk::PACK_SHRINK);
+
+    //phone number
+    Gtk::HBox b_num;
+    Gtk::Label l_num{"Phone:"};
+    l_name.set_width_chars(15);
+    b_num.pack_start(l_num, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_num;
+    e_num.set_max_length(50);
+    b_num.pack_start(e_num, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_num, Gtk::PACK_SHRINK);
+
+    //buttons
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("OK", 1);
+    dialog->show_all();
+
+    //check with regex
+    std::regex reg{"\\d{3,3}-\\d{3,3}-\\d{4,4}"};
+    bool fail = true;
+    while (fail)
+    {
+        int result = dialog->run();
+        std::string input = e_num.get_text();
+        if (result == 1 && !std::regex_match(input, reg)) //check if phone number is same
+            e_num.set_text("### INVALID ###");
+        else
+        {
+            fail = false;
+            dialog->close();
+        }
+    }
+    std::string name = e_name.get_text(), num = e_num.get_text();
+    Customer cust{name, num};
+    _store.add_customer(cust);
 }

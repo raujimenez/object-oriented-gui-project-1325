@@ -2,6 +2,7 @@
 #define MAIN_WINDOW_H
 #include <gtkmm.h>
 #include "store.h"
+#include <regex>
 
 class Mainwin : public Gtk::Window
 {
