@@ -35,7 +35,11 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     Gtk::MenuItem *menuitem_list = Gtk::manage(new Gtk::MenuItem("_List", true));
     menuitem_list->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_view_all_click));
     viewmenu->append(*menuitem_list);
-
+    //View: list customers
+    Gtk::MenuItem *menuitem_list_customer = Gtk::manage(new Gtk::MenuItem("_Customer", true));
+    menuitem_list_customer->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_list_customer_click));
+    viewmenu->append(*menuitem_list_customer);
+    
     //Create new
     Gtk::MenuItem *menuitem_create = Gtk::manage(new Gtk::MenuItem("_Create", true));
     menubar->append(*menuitem_create);
@@ -159,7 +163,6 @@ void Mainwin::on_create_donut_click()
     auto transformer = (new Donut(names[rand() % names.size()], prices[rand() % prices.size()], costs[rand() % costs.size()], frosting, sprinkles, filling));
     _store.add_product(transformer);
 }
-
 void Mainwin::on_create_customer_click()
 {
     Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Create customer"));
@@ -210,4 +213,14 @@ void Mainwin::on_create_customer_click()
     std::string name = e_name.get_text(), num = e_num.get_text();
     Customer cust{name, num};
     _store.add_customer(cust);
+}
+void Mainwin::on_list_customer_click()
+{
+    std::string view_string = "List of Customers from " + _store.name() + ":\n";
+    for (int i{0}; i < _store.number_of_customers(); i++)
+        view_string += _store.customer_to_string(i) + "\n";
+    Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(view_string));
+    view_all->set_transient_for(*this);
+    view_all->run();
+    view_all->close();
 }
