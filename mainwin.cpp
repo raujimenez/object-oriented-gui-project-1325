@@ -39,7 +39,7 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     Gtk::MenuItem *menuitem_list_customer = Gtk::manage(new Gtk::MenuItem("_Customer", true));
     menuitem_list_customer->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_list_customer_click));
     viewmenu->append(*menuitem_list_customer);
-    
+
     //Create new
     Gtk::MenuItem *menuitem_create = Gtk::manage(new Gtk::MenuItem("_Create", true));
     menubar->append(*menuitem_create);
@@ -77,91 +77,277 @@ void Mainwin::on_view_all_click()
 }
 void Mainwin::on_create_coffee_click()
 {
-    std::vector<std::string> names{"Cappucino", "flat white", "Affogato", "Irish Coffee", "Caffe Mocha", "Long Black", "Latte", "Ristretto", "Doppio", "Espresso", "Caffe Americano", "Iced Coffee", "Turkish Coffee"}; //testing purposes
-    std::vector<double> prices{5.13, 5.12, 4.11, 1.00, 14.23, 2.50, 3.29, 1.29, 10.00};
-    std::vector<double> costs{2.32, 1.32, 2.00, 5.98, 3.23, 1.90, .50, 1.40};
-    auto transformer = (new Java(names[rand() % names.size()], prices[rand() % prices.size()], costs[rand() % costs.size()], (rand() % 5) + 1));
-    for (int i{0}; i < 10; ++i) //diversify some of the shots
+    Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Create Java"));
+    dialog->set_transient_for(*this);
+
+    //name
+    Gtk::HBox b_name;
+    Gtk::Label l_name{"Name:"};
+    l_name.set_width_chars(15);
+    b_name.pack_start(l_name, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_name;
+    e_name.set_max_length(50);
+    b_name.pack_start(e_name, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_name, Gtk::PACK_SHRINK);
+
+    //price
+    Gtk::HBox b_price;
+    Gtk::Label l_price{"Price:"};
+    l_price.set_width_chars(15);
+    b_price.pack_start(l_price, Gtk::PACK_SHRINK);
+    Gtk::Entry e_price;
+    e_price.set_max_length(50);
+    b_price.pack_start(e_price, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_price, Gtk::PACK_SHRINK);
+
+    //cost
+    Gtk::HBox b_cost;
+    Gtk::Label l_cost{"Cost:"};
+    l_cost.set_width_chars(15);
+    b_cost.pack_start(l_cost, Gtk::PACK_SHRINK);
+    Gtk::Entry e_cost;
+    e_cost.set_max_length(50);
+    b_cost.pack_start(e_cost, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_cost, Gtk::PACK_SHRINK);
+
+    //darkness
+    Gtk::ComboBoxText c_darkness;
+    Gtk::HBox b_darkness;
+    Gtk::Label l_darkness{"Darkness:"};
+    l_darkness.set_width_chars(15);
+    b_darkness.pack_start(l_darkness, Gtk::PACK_SHRINK);
+    c_darkness.set_size_request(160);
+    c_darkness.append("Blonde");
+    c_darkness.append("Light");
+    c_darkness.append("Medium");
+    c_darkness.append("Dark");
+    c_darkness.append("Extra Dark");
+    b_darkness.pack_start(c_darkness, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_darkness, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("OK", 1);
+    dialog->show_all();
+
+    std::regex pricer{"^[0-9]+\\.?[0-9]*$"};
+    std::regex costr{"^[0-9]+\\.?[0-9]*$"};
+
+    bool fail = true;
+    int result;
+    std::string name, price, cost;
+    while (fail)
     {
-        switch (rand() % 5)
+        result = dialog->run();
+
+        name = e_name.get_text();
+        price = e_price.get_text();
+        cost = e_cost.get_text();
+        int darkness = c_darkness.get_active_row_number() + 1;
+        if (result == 1 && name == "") //check name
+            e_name.set_text("### INVALID ###");
+        else if (result == 1 && !std::regex_match(price, pricer)) //check price
+            e_price.set_text("### INVALID ###");
+        else if (result == 1 && !std::regex_match(cost, costr)) //check cost
+            e_cost.set_text("### INVALID ###");
+        else
         {
-        case (0):
-            transformer->add_shot(Shot::None);
-            break;
-        case (1):
-            transformer->add_shot(Shot::Chocolate);
-            break;
-        case (2):
-            transformer->add_shot(Shot::Vanilla);
-            break;
-        case (3):
-            transformer->add_shot(Shot::Peppermint);
-            break;
-        case (4):
-            transformer->add_shot(Shot::Hazelnut);
-            break;
+            fail = false;
+            if (result == 1)
+            {
+                double p = std::stod(price);
+                double c = std::stod(cost);
+                
+                auto transformer = new Java(name, p, c, darkness);
+                _store.add_product(transformer);
+                
+                //get shots
+                Gtk::Dialog *shotty = Gtk::manage(new Gtk::Dialog("Add shots"));
+                Gtk::ComboBoxText c_shotty;
+                Gtk::HBox b_shotty;
+                Gtk::Label l_shotty{"Shots:"};
+                l_shotty.set_width_chars(15);
+                b_shotty.pack_start(l_shotty, Gtk::PACK_SHRINK);
+                c_shotty.set_size_request(160);
+                c_shotty.append("None");
+                c_shotty.append("Chocolate");
+                c_shotty.append("Vanilla");
+                c_shotty.append("Peppermint");
+                c_shotty.append("Hazelnut");
+                b_shotty.pack_start(c_shotty, Gtk::PACK_SHRINK);
+                shotty->get_vbox()->pack_start(b_shotty, Gtk::PACK_SHRINK);
+
+                shotty->add_button("Cancel", 0);
+                shotty->add_button("Create", 1);
+                shotty->add_button("Add", 2);
+                shotty->show_all();
+
+                int result_shot = shotty->run();
+                while (result_shot != 1 && result_shot != 0)
+                {
+                    int shot_selected = c_shotty.get_active_row_number();
+                    switch (shot_selected)
+                    {
+                    case (0):
+                        transformer->add_shot(Shot::None);
+                        break;
+                    case (1):
+                        transformer->add_shot(Shot::Chocolate);
+                        break;
+                    case (2):
+                        transformer->add_shot(Shot::Vanilla);
+                        break;
+                    case (3):
+                        transformer->add_shot(Shot::Peppermint);
+                        break;
+                    case (4):
+                        transformer->add_shot(Shot::Hazelnut);
+                        break;
+                    }
+                }
+                shotty->close();
+            }
+            dialog->close();
         }
     }
-    _store.add_product(transformer);
+    
 }
 void Mainwin::on_create_donut_click()
 {
-    std::vector<std::string> names{
-        "Bavarian Kreme-Filled Donut",
-        "Chocolate Kreme-Filled Donut",
-        "Blueberry Donut",
-        "Apple-Crumb Donut",
-        "Marble-Frosted Donut",
-        "Jelly Donut",
-        "Cinnamon-Sugar Donut",
-        "Strawberry-Frosted Donut"}; //testing purposes
-    std::vector<double> prices{5.13, 5.12, 4.11, 1.00, 14.23, 2.50, 3.29, 1.29, 10.00};
-    std::vector<double> costs{2.32, 1.32, 2.00, 5.98, 3.23, 1.90, .50, 1.40};
+    Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Create Donut"));
+    dialog->set_transient_for(*this);
 
-    Frosting frosting;
-    switch (rand() % 4)
+    //name
+    Gtk::HBox b_name;
+    Gtk::Label l_name{"Name:"};
+    l_name.set_width_chars(15);
+    b_name.pack_start(l_name, Gtk::PACK_SHRINK);
+    Gtk::Entry e_name;
+    e_name.set_max_length(50);
+    b_name.pack_start(e_name, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_name, Gtk::PACK_SHRINK);
+
+    //price
+    Gtk::HBox b_price;
+    Gtk::Label l_price{"Price:"};
+    l_price.set_width_chars(15);
+    b_price.pack_start(l_price, Gtk::PACK_SHRINK);
+    Gtk::Entry e_price;
+    e_price.set_max_length(50);
+    b_price.pack_start(e_price, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_price, Gtk::PACK_SHRINK);
+
+    //cost
+    Gtk::HBox b_cost;
+    Gtk::Label l_cost{"Cost:"};
+    l_cost.set_width_chars(15);
+    b_cost.pack_start(l_cost, Gtk::PACK_SHRINK);
+    Gtk::Entry e_cost;
+    e_cost.set_max_length(50);
+    b_cost.pack_start(e_cost, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_cost, Gtk::PACK_SHRINK);
+
+    //Frosting
+    Gtk::ComboBoxText c_frosting;
+    Gtk::HBox b_frosting;
+    Gtk::Label l_frosting{"Frosting:"};
+    l_frosting.set_width_chars(15);
+    b_frosting.pack_start(l_frosting, Gtk::PACK_SHRINK);
+    c_frosting.set_size_request(160);
+    c_frosting.append("Unfrosted");
+    c_frosting.append("Chocolate top");
+    c_frosting.append("Vanilla top");
+    c_frosting.append("Pink top");
+    b_frosting.pack_start(c_frosting, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_frosting, Gtk::PACK_SHRINK);
+
+    //Filling
+    Gtk::ComboBoxText c_filling;
+    Gtk::HBox b_filling;
+    Gtk::Label l_filling{"Body style:"};
+    l_filling.set_width_chars(15);
+    b_filling.pack_start(l_filling, Gtk::PACK_SHRINK);
+    c_filling.set_size_request(160);
+    c_filling.append("Unfilled");
+    c_filling.append("Creme");
+    c_filling.append("Bavarian");
+    c_filling.append("Strawberry");
+    b_filling.pack_start(c_filling, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_filling, Gtk::PACK_SHRINK);
+
+    //sprinkles
+    Gtk::CheckButton c_sprinkles{"Sprinkles"};
+    dialog->get_vbox()->pack_start(c_sprinkles, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("OK", 1);
+    dialog->show_all();
+
+    std::regex pricer{"^[0-9]+\\.?[0-9]*$"};
+    std::regex costr{"^[0-9]+\\.?[0-9]*$"};
+
+    bool fail = true;
+    int result;
+    std::string name, price, cost;
+    while (fail)
     {
-    case (0):
-        frosting = Frosting::Unfrosted;
-        break;
-    case (1):
-        frosting = Frosting::Chocolate_top;
-        break;
-    case (2):
-        frosting = Frosting::Vanilla_top;
-        break;
-    case (3):
-        frosting = Frosting::Pink_top;
-        break;
+        result = dialog->run();
+
+        name = e_name.get_text();
+        price = e_price.get_text();
+        cost = e_cost.get_text();
+        if (result == 1 && name == "") //check name
+            e_name.set_text("### INVALID ###");
+        else if (result == 1 && !std::regex_match(price, pricer)) //check price
+            e_price.set_text("### INVALID ###");
+        else if (result == 1 && !std::regex_match(cost, costr)) //check cost
+            e_cost.set_text("### INVALID ###");
+        else
+        {
+            fail = false;
+            if (result == 1)
+            {
+                Frosting frosting;
+                double p = std::stod(price);
+                double c = std::stod(cost);
+                switch (c_frosting.get_active_row_number())
+                {
+                case (0):
+                    frosting = Frosting::Unfrosted;
+                    break;
+                case (1):
+                    frosting = Frosting::Chocolate_top;
+                    break;
+                case (2):
+                    frosting = Frosting::Vanilla_top;
+                    break;
+                case (3):
+                    frosting = Frosting::Pink_top;
+                    break;
+                }
+                Filling filling;
+                switch (c_filling.get_active_row_number())
+                {
+                case (0):
+                    filling = Filling::Unfilled;
+                    break;
+                case (1):
+                    filling = Filling::Creme;
+                    break;
+                case (2):
+                    filling = Filling::Bavarian;
+                    break;
+                case (3):
+                    filling = Filling::Strawberry;
+                    break;
+                }
+                bool sprinkles = c_sprinkles.get_active();
+                auto transformer = new Donut(name, p, c, frosting, sprinkles, filling);
+                _store.add_product(transformer);
+            }
+            dialog->close();
+        }
     }
-    Filling filling;
-    switch (rand() % 4)
-    {
-    case (0):
-        filling = Filling::Unfilled;
-        break;
-    case (1):
-        filling = Filling::Creme;
-        break;
-    case (2):
-        filling = Filling::Bavarian;
-        break;
-    case (3):
-        filling = Filling::Strawberry;
-        break;
-    }
-    bool sprinkles;
-    switch (rand() % 2)
-    {
-    case (0):
-        sprinkles = true;
-        break;
-    case (1):
-        sprinkles = false;
-        break;
-    }
-    auto transformer = (new Donut(names[rand() % names.size()], prices[rand() % prices.size()], costs[rand() % costs.size()], frosting, sprinkles, filling));
-    _store.add_product(transformer);
 }
 void Mainwin::on_create_customer_click()
 {
