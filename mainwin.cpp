@@ -57,6 +57,42 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     Gtk::MenuItem *menuitem_createcustomer = Gtk::manage(new Gtk::MenuItem("_Customer", true));
     menuitem_createcustomer->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_create_customer_click));
     createmenu->append(*menuitem_createcustomer);
+
+    Gtk::Image *p_list = Gtk::manage(new Gtk::Image("p_list.png"));
+    Gtk::Image *list = Gtk::manage(new Gtk::Image("list.png"));
+    Gtk::Image *donut = Gtk::manage(new Gtk::Image("donut.png"));
+    Gtk::Image *java = Gtk::manage(new Gtk::Image("coffee.png"));
+    Gtk::Image *customer = Gtk::manage(new Gtk::Image("customer.png"));
+    //toolbar
+    Gtk::Toolbar *toolbar = Gtk::manage(new Gtk::Toolbar());
+    vbox->add(*toolbar);
+
+    //list products
+    Gtk::ToolButton *listproduct = Gtk::manage(new Gtk::ToolButton(*p_list));
+    listproduct->set_tooltip_markup("List of all Products");
+    listproduct->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_view_all_click));
+    toolbar->append(*listproduct);
+    //add java
+    Gtk::ToolButton *addjava = Gtk::manage(new Gtk::ToolButton(*java));
+    addjava->set_tooltip_markup("Create Coffee");
+    addjava->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_create_coffee_click));
+    toolbar->append(*addjava);
+    //add coffee
+    Gtk::ToolButton *adddonut = Gtk::manage(new Gtk::ToolButton(*donut));
+    adddonut->set_tooltip_markup("Create Donut");
+    adddonut->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_create_donut_click));
+    toolbar->append(*adddonut);
+    //list customers
+    Gtk::ToolButton *listcustomer = Gtk::manage(new Gtk::ToolButton(*list));
+    listcustomer->set_tooltip_markup("List Customers");
+    listcustomer->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_list_customer_click));
+    toolbar->append(*listcustomer);
+    //Create customers
+    Gtk::ToolButton *addcustomer = Gtk::manage(new Gtk::ToolButton(*customer));
+    addcustomer->set_tooltip_markup("Add customer");
+    addcustomer->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_create_customer_click));
+    toolbar->append(*addcustomer);
+
     vbox->show_all();
 }
 
@@ -157,10 +193,10 @@ void Mainwin::on_create_coffee_click()
             {
                 double p = std::stod(price);
                 double c = std::stod(cost);
-                
+
                 auto transformer = new Java(name, p, c, darkness);
                 _store.add_product(transformer);
-                
+
                 //get shots
                 Gtk::Dialog *shotty = Gtk::manage(new Gtk::Dialog("Add shots"));
                 Gtk::ComboBoxText c_shotty;
@@ -211,7 +247,6 @@ void Mainwin::on_create_coffee_click()
             dialog->close();
         }
     }
-    
 }
 void Mainwin::on_create_donut_click()
 {
