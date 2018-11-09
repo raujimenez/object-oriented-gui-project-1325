@@ -58,11 +58,22 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     menuitem_createcustomer->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_create_customer_click));
     createmenu->append(*menuitem_createcustomer);
 
+    //Help
+    Gtk::MenuItem *menuitem_help = Gtk::manage(new Gtk::MenuItem("_Help", true));
+    menubar->append(*menuitem_help);
+    Gtk::Menu *helpmenu = Gtk::manage(new Gtk::Menu());
+    menuitem_help->set_submenu(*helpmenu);
+    //Help: about
+    Gtk::MenuItem *menuitem_about = Gtk::manage(new Gtk::MenuItem("_About", true));
+    menuitem_about->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_about_click));
+    helpmenu->append(*menuitem_about);
+
     Gtk::Image *p_list = Gtk::manage(new Gtk::Image("p_list.png"));
     Gtk::Image *list = Gtk::manage(new Gtk::Image("list.png"));
     Gtk::Image *donut = Gtk::manage(new Gtk::Image("donut.png"));
     Gtk::Image *java = Gtk::manage(new Gtk::Image("coffee.png"));
     Gtk::Image *customer = Gtk::manage(new Gtk::Image("customer.png"));
+
     //toolbar
     Gtk::Toolbar *toolbar = Gtk::manage(new Gtk::Toolbar());
     vbox->add(*toolbar);
@@ -96,6 +107,22 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     vbox->show_all();
 }
 
+void Mainwin::on_about_click()
+{
+    Gtk::AboutDialog dialog{};
+    dialog.set_transient_for(*this);
+    dialog.set_program_name("JADE");
+    auto logo = Gdk::Pixbuf::create_from_file("logo.png");
+    dialog.set_logo(logo);
+    dialog.set_version("Version 1.0.0");
+    dialog.set_copyright("Copyright 2018-2019");
+    dialog.set_license_type(Gtk::License::LICENSE_GPL_3_0);
+    std::vector<Glib::ustring> authors = {"Raul Jimenez"};
+    dialog.set_authors(authors);
+    std::vector<Glib::ustring> artists = {"Raul Jimenez"}; // vector redacted for space
+    dialog.set_artists(artists);
+    dialog.run();
+}
 void Mainwin::on_quit_click()
 {
     hide();
@@ -404,7 +431,7 @@ void Mainwin::on_create_customer_click()
     //phone number
     Gtk::HBox b_num;
     Gtk::Label l_num{"Phone:"};
-    l_name.set_width_chars(15);
+    l_num.set_width_chars(15);
     b_num.pack_start(l_num, Gtk::PACK_SHRINK);
 
     Gtk::Entry e_num;
@@ -423,18 +450,26 @@ void Mainwin::on_create_customer_click()
     while (fail)
     {
         int result = dialog->run();
+        std::string name = e_name.get_text();
         std::string input = e_num.get_text();
-        if (result == 1 && !std::regex_match(input, reg)) //check if phone number is same
+        if (result == 1 && name == "")
+            e_name.set_text("### INVALID ###");
+        else if (result == 1 && !std::regex_match(input, reg)) //check if phone number is same
             e_num.set_text("### INVALID ###");
-        else
+        else if (result == 0)
         {
             fail = false;
             dialog->close();
         }
+        else
+        {
+            fail = false;
+            std::string namer = e_name.get_text(), num = e_num.get_text();
+            Customer cust{namer, num};
+            _store.add_customer(cust);
+            dialog->close();
+        }
     }
-    std::string name = e_name.get_text(), num = e_num.get_text();
-    Customer cust{name, num};
-    _store.add_customer(cust);
 }
 void Mainwin::on_list_customer_click()
 {
