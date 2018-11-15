@@ -18,6 +18,8 @@ donut.o: donut.cpp *.h
 	${CXX} ${CXXFLAGS} -c donut.cpp
 customer.o: customer.cpp *.h
 	${CXX} ${CXXFLAGS} -c customer.cpp
+order.o: order.cpp *.h
+	${CXX} ${CXXFLAGS} -c order.cpp
 
 clean:
 	rm -rf *.o main
