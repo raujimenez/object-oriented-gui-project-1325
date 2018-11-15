@@ -4,6 +4,8 @@
 #include <vector>
 #include "product.h"
 
+static int orderid = 0;
+
 class Order
 {
   public:
