@@ -18,6 +18,7 @@ protected:
   void on_create_donut_click();
   void on_create_customer_click();
   void on_list_customer_click();
+  void on_view_order_click();
   void on_about_click();
 
 private:
