@@ -1,8 +1,8 @@
 CXXFLAGS += --std=c++17
 GTKFLAGS += `/usr/bin/pkg-config gtkmm-3.0 --cflags --libs`
 
-main: main.o mainwin.o store.o product.o java.o donut.o customer.o
-	${CXX} ${CXXFLAGS} -o main main.o mainwin.o store.o product.o java.o donut.o customer.o ${GTKFLAGS}
+main: main.o mainwin.o store.o product.o java.o donut.o customer.o order.o
+	${CXX} ${CXXFLAGS} -o main main.o mainwin.o store.o product.o java.o donut.o customer.o order.o ${GTKFLAGS}
 
 main.o: main.cpp *.h
 	${CXX} ${CXXFLAGS} -c main.cpp ${GTKFLAGS}
