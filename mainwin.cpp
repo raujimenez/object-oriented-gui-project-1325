@@ -57,6 +57,10 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     Gtk::MenuItem *menuitem_createcustomer = Gtk::manage(new Gtk::MenuItem("_Customer", true));
     menuitem_createcustomer->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_create_customer_click));
     createmenu->append(*menuitem_createcustomer);
+    //Create new: create order
+    Gtk::MenuItem *menuitem_createorder = Gtk::manage(new Gtk::MenuItem("_Order", true));
+    menuitem_createorder->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_create_order_click));
+    createmenu->append(*menuitem_createorder);
 
     //Help
     Gtk::MenuItem *menuitem_help = Gtk::manage(new Gtk::MenuItem("_Help", true));
@@ -480,4 +484,83 @@ void Mainwin::on_list_customer_click()
     view_all->set_transient_for(*this);
     view_all->run();
     view_all->close();
+}
+void Mainwin::on_create_order_click()
+{
+    Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Create order"));
+    dialog->set_transient_for(*this);
+    Order ord = Order();
+    std::string ord_num{"Order #"};
+    ord_num += std::to_string(ord.order_number()) + "\n";
+    //name
+    Gtk::HBox b_order;
+    Gtk::Label l_order{ord_num};
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);
+    //product
+    Gtk::ComboBoxText c_product;
+    Gtk::HBox b_product;
+    Gtk::Label l_product{"Product:"};
+    l_product.set_width_chars(15);
+    b_product.pack_start(l_product, Gtk::PACK_SHRINK);
+    c_product.set_size_request(160);
+    for (auto p : _store.products())
+        c_product.append(p->to_string());
+    b_product.pack_start(c_product, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_product, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("Add", 1);
+    dialog->add_button("Next", 2);
+
+    bool not_done = true;
+    while (not_done)
+    {
+        dialog->show_all();
+        int result = dialog->run();
+        if (result == 0){
+            dialog->close();
+            not_done = false;
+        }
+        else if (result == 1) //adds product to order
+        {
+            int product_selected = c_product.get_active_row_number();
+            ord.add_product(_store.products()[product_selected]);
+            ord_num += _store.products()[product_selected]->to_string() + "\n";
+            l_order.set_text(ord_num);
+        }
+        else if (result == 2)
+        {
+            Gtk::Dialog *custo = Gtk::manage(new Gtk::Dialog("Select Customer"));
+            custo->set_transient_for(*dialog);
+            Gtk::ComboBoxText c_custo;
+            Gtk::HBox b_custo;
+            Gtk::Label l_custo{"Customer:"};
+            b_custo.pack_start(l_order, Gtk::PACK_SHRINK);
+            l_custo.set_width_chars(15);
+            b_custo.pack_start(l_custo, Gtk::PACK_SHRINK);
+            c_custo.set_size_request(160);
+            for (int i = 0; i < _store.number_of_customers(); i++)
+                c_custo.append(_store.customer_to_string(i));
+            b_custo.pack_start(c_custo, Gtk::PACK_SHRINK);
+            custo->get_vbox()->pack_start(b_custo, Gtk::PACK_SHRINK);
+
+            std::string order_num = "Place order " + ord.order_number();
+            custo->add_button("Cancel", 0);
+            custo->add_button(order_num, 1);
+            
+            custo->show_all();
+            int customer_result = custo->run();
+            if (customer_result == 0)
+                custo->close();
+            else if (customer_result == 1)
+            {
+                int customer_select = c_custo.get_active_row_number();
+                _store.place_order(ord, customer_select);
+                custo->close();
+                dialog->close();
+                not_done = false;
+            }
+        }
+    }
 }
