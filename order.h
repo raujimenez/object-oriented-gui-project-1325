@@ -6,19 +6,21 @@
 #include "java.h"
 #include "donut.h"
 
-static int orderid = 0;
 
 class Order
 {
   public:
+    static int orderid;
     Order();
-    int order_number();
+    int order_number() const;
     void add_product(Product *product);
     bool paid();
     void pay();
     bool filled();
     void fill();
     std::string products_to_string();
+    friend bool operator< (const Order& x, const Order& r);
+
   protected:
     std::vector<Product *> _products;
 
