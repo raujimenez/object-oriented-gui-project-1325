@@ -63,3 +63,8 @@ std::string Store::order_to_string(int order_number)
     string_to_return += ord.products_to_string();
     return string_to_return;
 }
+
+std::map<Order, Customer> Store::orders()
+{
+    return _orders;
+}

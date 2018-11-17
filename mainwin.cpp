@@ -564,7 +564,7 @@ void Mainwin::on_create_order_click()
             b_custo.pack_start(c_custo, Gtk::PACK_SHRINK);
             custo->get_vbox()->pack_start(b_custo, Gtk::PACK_SHRINK);
 
-            std::string order_num = "Place order " + ord.order_number();
+            std::string order_num = "Place";
             custo->add_button("Cancel", 0);
             custo->add_button(order_num, 1);
 
@@ -593,7 +593,6 @@ void Mainwin::on_view_order_click()
     disp_order.pack_start(label_order, Gtk::PACK_SHRINK);
     dialog->get_vbox()->pack_start(disp_order, Gtk::PACK_SHRINK);
 
-
     Gtk::ComboBoxText c_order;
     Gtk::HBox b_order;
     Gtk::Label l_order{"Order:"};
@@ -601,15 +600,17 @@ void Mainwin::on_view_order_click()
     l_order.set_width_chars(15);
     b_order.pack_start(l_order, Gtk::PACK_SHRINK);
     c_order.set_size_request(160);
-    for (int i = 0; i < _store.number_of_orders(); i++)
-        c_order.append(std::to_string(i));
+    for (auto iter : _store.orders()){
+        auto ord_cpy = iter.first;
+        c_order.append(std::to_string(ord_cpy.order_number()));
+    }
     b_order.pack_start(c_order, Gtk::PACK_SHRINK);
     dialog->get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);
 
     dialog->add_button("Cancel", 0);
     dialog->add_button("Show", 1);
 
-    int is_viewing = true;
+    bool is_viewing = true;
     while(is_viewing)
     {
         dialog->show_all();

@@ -21,6 +21,7 @@ public:
   int number_of_customers();
   std::string customer_to_string(int customer);
 
+  std::map<Order, Customer> orders();
   void place_order(Order order, int customer);
   int number_of_orders();
   std::string order_to_string(int order_number);
