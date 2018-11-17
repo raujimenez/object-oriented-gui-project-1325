@@ -3,7 +3,9 @@
 #include "product.h"
 #include "java.h"
 #include "donut.h"
-#include "vector"
+#include "order.h"
+#include <vector>
+#include <map>
 #include "customer.h"
 class Store
 {
@@ -18,10 +20,16 @@ public:
   int number_of_customers();
   std::string customer_to_string(int customer);
 
+  int place_order(Order order, int customer);
+  int number_of_orders();
+  std::string order_to_string(int order_number);
+
+
 private:
   std::string _name;
   std::vector<Product *> _products;
   std::vector<Customer> _customers;
+  std::map<Order, Customer> _orders;
 };
 
 #endif

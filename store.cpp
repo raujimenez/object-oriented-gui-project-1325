@@ -33,3 +33,28 @@ std::string Store::customer_to_string(int customer)
 {
     return _customers[customer].to_string();
 }
+
+int Store::place_order(Order order, int customer)
+{
+    _orders[order] = _customers[customer];
+}
+
+int Store::number_of_orders()
+{
+    return _orders.size();
+}
+
+std::string Store::order_to_string(int order_number)
+{
+    std::string string_to_return{""};
+    std::map<Order,Customer>::iterator iter = _orders.begin();
+    for(int i{0}; i < order_number; i++) //get current value in map
+    {
+        iter++;
+    }
+    //iter now contains point to current key
+    Customer cust = iter->second;
+    Order ord = iter->first;
+    string_to_return += cust.to_string() + ", Order#" +std::to_string(ord.order_number()) + "\n";
+    string_to_return += ord.products_to_string();
+}

@@ -33,3 +33,11 @@ bool Order::filled(){
 void Order::fill(){
     _is_filled = true;
 }
+
+std::string Order::products_to_string()
+{
+    std::string to_return{""};
+    for(auto i : _products)
+        to_return += i->to_string() + "\n";
+    return to_return;
+}

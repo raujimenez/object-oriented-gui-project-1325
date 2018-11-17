@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "product.h"
+#include "java.h"
+#include "donut.h"
 
 static int orderid = 0;
 
@@ -16,7 +18,7 @@ class Order
     void pay();
     bool filled();
     void fill();
-
+    std::string products_to_string();
   protected:
     std::vector<Product *> _products;
 
