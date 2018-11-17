@@ -8,7 +8,7 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
 {
 
     //SET UP GUI
-    set_default_size(600, 400);
+    set_default_size(1000, 600);
     Gtk::Box *vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
     add(*vbox);
 
@@ -76,6 +76,8 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     menuitem_about->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_about_click));
     helpmenu->append(*menuitem_about);
 
+    Gtk::Image *order = Gtk::manage(new Gtk::Image("order.png"));
+    Gtk::Image *o_list = Gtk::manage(new Gtk::Image("o_list.png"));
     Gtk::Image *p_list = Gtk::manage(new Gtk::Image("p_list.png"));
     Gtk::Image *list = Gtk::manage(new Gtk::Image("list.png"));
     Gtk::Image *donut = Gtk::manage(new Gtk::Image("donut.png"));
@@ -85,6 +87,18 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     //toolbar
     Gtk::Toolbar *toolbar = Gtk::manage(new Gtk::Toolbar());
     vbox->add(*toolbar);
+
+    //list orders
+    Gtk::ToolButton *listorder = Gtk::manage(new Gtk::ToolButton(*o_list));
+    listorder->set_tooltip_markup("List of an order");
+    listorder->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_view_order_click));
+    toolbar->append(*listorder);
+
+    //ad
+    Gtk::ToolButton *addorder = Gtk::manage(new Gtk::ToolButton(*order));
+    addorder->set_tooltip_markup("Add an order");
+    addorder->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_create_order_click));
+    toolbar->append(*addorder);
 
     //list products
     Gtk::ToolButton *listproduct = Gtk::manage(new Gtk::ToolButton(*p_list));
