@@ -13,6 +13,7 @@ public:
 protected:
   void on_quit_click();
   void on_view_all_click();
+  void on_create_order_click();
   void on_create_coffee_click();
   void on_create_donut_click();
   void on_create_customer_click();
