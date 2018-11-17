@@ -6,6 +6,7 @@
 class Customer
 {
   public:
+    Customer();
     Customer(std::string renter, std::string renter_phone);
     std::string to_string();
 
