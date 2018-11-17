@@ -13,6 +13,7 @@ public:
   Store(std::string name);
   std::string name();
   std::vector<Product *> products();
+  std::vector<Customer> customers();
   void add_product(Product *product);
   int number_of_products();
   std::string product_to_string(int product);
@@ -20,10 +21,9 @@ public:
   int number_of_customers();
   std::string customer_to_string(int customer);
 
-  int place_order(Order order, int customer);
+  void place_order(Order order, int customer);
   int number_of_orders();
   std::string order_to_string(int order_number);
-
 
 private:
   std::string _name;
