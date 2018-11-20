@@ -6,6 +6,12 @@ std::string Product::name()
 {
     return _name;
 }
+
+double Product::profit()
+{
+    return _price - _cost;
+}
+
 double Product::price()
 {
     return _price;

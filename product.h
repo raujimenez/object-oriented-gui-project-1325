@@ -12,6 +12,7 @@ class Product
   public:
     Product(std::string name, double price, double cost);
     std::string name();
+    double profit();
     double price();
     double cost();
     virtual std::string to_string();
