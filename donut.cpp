@@ -2,18 +2,9 @@
 
 Donut::Donut(std::string name, double price, double cost, Frosting frosting, bool sprinkles, Filling filling) : Product(name, price, cost), _frosting{frosting}, _sprinkles{sprinkles}, _filling{filling} {}
 
-Frosting Donut::frosting()
-{
-    return _frosting;
-}
-bool Donut::sprinkles()
-{
-    return _sprinkles;
-}
-Filling Donut::filling()
-{
-    return _filling;
-}
+Frosting Donut::frosting() { return _frosting; }
+bool Donut::sprinkles() { return _sprinkles; }
+Filling Donut::filling() { return _filling; }
 
 std::string Donut::to_string()
 {
