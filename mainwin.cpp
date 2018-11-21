@@ -96,6 +96,9 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
 
     Gtk::Image *order = Gtk::manage(new Gtk::Image("order.png"));
     Gtk::Image *o_list = Gtk::manage(new Gtk::Image("o_list.png"));
+    Gtk::Image *fill = Gtk::manage(new Gtk::Image("fill.png"));
+    Gtk::Image *pay = Gtk::manage(new Gtk::Image("pay.png"));
+    Gtk::Image *discard = Gtk::manage(new Gtk::Image("discard.png"));
     Gtk::Image *p_list = Gtk::manage(new Gtk::Image("p_list.png"));
     Gtk::Image *list = Gtk::manage(new Gtk::Image("list.png"));
     Gtk::Image *donut = Gtk::manage(new Gtk::Image("donut.png"));
@@ -117,6 +120,22 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     addorder->set_tooltip_markup("Add an order");
     addorder->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_create_order_click));
     toolbar->append(*addorder);
+
+    //fill order
+    Gtk::ToolButton *fillorder = Gtk::manage(new Gtk::ToolButton(*fill));
+    fillorder->set_tooltip_markup("Fill an order");
+    fillorder->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_fill_click));
+    toolbar->append(*fillorder);
+    //pay order
+    Gtk::ToolButton *payorder = Gtk::manage(new Gtk::ToolButton(*pay));
+    payorder->set_tooltip_markup("Pay an order");
+    payorder->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_pay_click));
+    toolbar->append(*payorder);    
+    //discard order
+    Gtk::ToolButton *discardorder = Gtk::manage(new Gtk::ToolButton(*discard));
+    discardorder->set_tooltip_markup("Add an order");
+    discardorder->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_discard_click));
+    toolbar->append(*discardorder);
 
     //list products
     Gtk::ToolButton *listproduct = Gtk::manage(new Gtk::ToolButton(*p_list));
