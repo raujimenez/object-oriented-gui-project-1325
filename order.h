@@ -13,14 +13,16 @@ class Order
 public:
   static int orderid;
   Order();
+  Order(const Order &ordcpy);
   int order_number() const;
   void add_product(Product *product);
-  
-  bool paid();
+  std::vector<Product *> products() const;
+
+  bool paid() const;
   void pay();
-  bool filled();
+  bool filled() const;
   void fill();
-  bool discarded();
+  bool discarded() const;
   void discard();
   
   bool pending();

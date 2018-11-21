@@ -2,12 +2,13 @@
 
 int Order::orderid = 0;
 Order::Order() : _is_paid{false}, _is_filled{false}, _is_discarded{false} { _order_number = orderid++; }
-
+Order::Order(const Order &ordcpy): _products{ordcpy.products()}, _order_number{ordcpy.order_number()}, _is_paid{ordcpy.paid()}, _is_filled{ordcpy.filled()}, _is_discarded{ordcpy.discarded()} {} 
 //GETTER METHODS
 int Order::order_number() const { return _order_number; }
-bool Order::filled() { return _is_filled; }
-bool Order::paid() { return _is_paid; }
-bool Order::discarded() { return _is_discarded; }
+bool Order::filled() const { return _is_filled; }
+bool Order::paid() const { return _is_paid; }
+bool Order::discarded() const { return _is_discarded; }
+std::vector<Product *> Order::products() const { return _products; }
 
 //STATE MACHINE METHODS
 void Order::pay(){ if (!_is_paid && !_is_discarded) _is_paid = true; else throw std::runtime_error("Order could not be paid."); }
