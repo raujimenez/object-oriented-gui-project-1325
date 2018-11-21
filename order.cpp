@@ -11,14 +11,14 @@ bool Order::discarded() const { return _is_discarded; }
 std::vector<Product *> Order::products() const { return _products; }
 
 //STATE MACHINE METHODS
-void Order::pay(){ if (!_is_paid && !_is_discarded) _is_paid = true; else throw std::runtime_error("Order could not be paid."); }
-void Order::fill() { if (!_is_filled && !_is_discarded) _is_filled = true; else throw std::runtime_error("Order could not be filled."); }
-void Order::discard() { if(!_is_discarded && !completed()) _is_discarded = true; else throw std::runtime_error("Order could not be discarded."); }
+void Order::pay(){ if (!_is_paid) _is_paid = true; else throw std::runtime_error("Order could not be paid."); }
+void Order::fill() { if (!_is_filled) _is_filled = true; else throw std::runtime_error("Order could not be filled."); }
+void Order::discard() { if(!_is_discarded) _is_discarded = true; else throw std::runtime_error("Order could not be discarded."); }
 bool Order::pending() { if (!_is_discarded && !_is_paid && !_is_filled) return true; return false;}
-bool Order::completed() { if (_is_filled && _is_paid && !_is_discarded) return true; return false;}
+bool Order::completed() { if (_is_filled && _is_paid) return true; return false;}
 
 //runs through products vector to get profit for each product and adds them up
-double Order::profit() { int profit{0}; for (auto i : _products) profit += i->profit(); return profit; } 
+double Order::profit() { double profit{0}; for (auto i : _products) profit += i->profit(); return profit; } 
 void Order::add_product(Product *product) { _products.push_back(product); }
 
 std::string Order::products_to_string()

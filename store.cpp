@@ -44,6 +44,8 @@ void Store::pay_order(int order_number){
     auto ord = iter->first; //use copy constructor
     auto cust = iter->second; 
     ord.pay();
+    if(ord.completed())
+        _cash += ord.profit();
     _orders.erase(iter->first);
     _orders[ord] = cust;
 }
@@ -52,16 +54,16 @@ void Store::fill_order(int order_number){
     auto ord = iter->first;
     auto cust = iter->second;
     ord.fill();
+    if(ord.completed())
+        _cash += ord.profit();
     _orders.erase(iter->first);
     _orders[ord] = cust;
 }
 void Store::discard_order(int order_number){
     auto iter = get_pair(order_number);
     auto ord = iter->first;
-    auto cust = iter->second;
     ord.discard();
     _orders.erase(iter->first);
-    _orders[ord] = cust;
 }
 
 //GETTERS TO STATE MACHINE (READ-ONLY)
