@@ -27,11 +27,13 @@ public:
   std::string order_to_string(int order_number);
 
   double cash();
+  
   void pay_order(int order_number);
-  bool order_is_paid(int order_number);
   void fill_order(int order_number);
-  bool order_is_filled(int order_number);
   void discard_order(int order_number);
+
+  bool order_is_filled(int order_number);
+  bool order_is_paid(int order_number);
   bool order_is_discarded(int order_number);
   bool order_is_completed(int order_number);
   bool order_is_pending(int order_number);
