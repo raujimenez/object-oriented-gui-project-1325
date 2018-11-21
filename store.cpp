@@ -29,12 +29,10 @@ std::string Store::order_to_string(int order_number)
     auto cust = iter->second;
     auto ord = iter->first;
     std::string status{""};
-    if(ord.completed())
-        status += "(Paid)";
-    else if(ord.pending())
-        status += "(Pending)";
-    else
-        status += "(Filled)";
+    if(ord.paid() && !ord.filled()) status += "(Paid)";
+    else if(ord.pending()) status += "(Pending)";
+    else if (ord.filled() && !ord.paid()) status += "(Filled)";
+    else status += "(Completed)";
     string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + status +"\n" + ord.products_to_string();
     return string_to_return;
 }
