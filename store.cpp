@@ -28,7 +28,14 @@ std::string Store::order_to_string(int order_number)
     auto iter = get_pair(order_number);
     auto cust = iter->second;
     auto ord = iter->first;
-    string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + "\n" + ord.products_to_string();
+    std::string status{""};
+    if(ord.completed())
+        status += "(Paid)";
+    else if(ord.pending())
+        status += "(Pending)";
+    else
+        status += "(Filled)";
+    string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + status +"\n" + ord.products_to_string();
     return string_to_return;
 }
 //CHANGE THE BOOLEANS

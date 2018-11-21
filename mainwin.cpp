@@ -716,7 +716,6 @@ void Mainwin::on_fill_click()
             catch (std::exception &e)
             {
                 Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
-                view_all->set_transient_for(*dialog);
                 view_all->run();
                 view_all->close();
             }
@@ -775,7 +774,6 @@ void Mainwin::on_pay_click()
             catch (std::exception &e)
             {
                 Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
-                view_all->set_transient_for(*dialog);
                 view_all->run();
                 view_all->close();
             }
@@ -833,7 +831,6 @@ void Mainwin::on_discard_click()
             catch (std::exception &e)
             {
                 Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
-                view_all->set_transient_for(*dialog);
                 view_all->run();
                 view_all->close();
             }
