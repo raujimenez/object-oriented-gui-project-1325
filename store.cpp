@@ -3,6 +3,7 @@
 Store::Store(std::string name) : _name{name} {}
 
 // GETTER METHODS
+double Store::cash(){ return _cash; }
 std::string Store::name() { return _name; }
 std::vector<Product *> Store::products() { return _products; }
 std::vector<Customer> Store::customers() { return _customers; }
@@ -24,12 +25,50 @@ int Store::number_of_orders() { return _orders.size(); }
 std::string Store::order_to_string(int order_number)
 {
     std::string string_to_return{""};
-    auto iter = _orders.begin();
-    for (int i{0}; i < order_number; i++) //get current value in map
-        iter++;
-    //iter now contains point to current key
+    auto iter = get_pair(order_number);
     auto cust = iter->second;
     auto ord = iter->first;
     string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + "\n" + ord.products_to_string();
     return string_to_return;
+}
+
+//GETTERS TO STATE MACHINE (READ-ONLY)
+bool Store::order_is_paid(int order_number)
+{
+    auto iter = get_pair(order_number);
+    auto ord = iter->first;
+    return ord.paid();
+}
+bool Store::order_is_filled(int order_number)
+{
+    auto iter = get_pair(order_number);
+    auto ord = iter->first;
+    return ord.filled();
+}
+bool Store::order_is_discarded(int order_number)
+{
+    auto iter = get_pair(order_number);
+    auto ord = iter->first;
+    return ord.discarded();
+}
+bool Store::order_is_completed(int order_number)
+{
+    auto iter = get_pair(order_number);
+    auto ord = iter->first;
+    return ord.completed();
+}
+bool Store::order_is_pending(int order_number)
+{
+    auto iter = get_pair(order_number);
+    auto ord = iter->first;
+    return ord.pending();
+}
+
+//Gets itterator
+std::map<Order, Customer>::iterator Store::get_pair(int order_number)
+{
+    auto iter = _orders.begin();
+    for (int i{0}; i < order_number; i++) //get current value in map
+        iter++;
+    return iter;
 }
