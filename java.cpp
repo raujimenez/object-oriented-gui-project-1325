@@ -32,13 +32,13 @@ std::string Java::to_string()
         case (Shot::Hazelnut): shot_quantity[4] += 1; break;
         }
     }
-    shots_string = "None = " + std::to_string(shot_quantity[0]) +
-                   "\n\t\t    Chocolate = " + std::to_string(shot_quantity[1]) +
-                   "\n\t\t    Vanilla = " + std::to_string(shot_quantity[2]) +
-                   "\n\t\t    Peppermint = " + std::to_string(shot_quantity[3]) +
-                   "\n\t\t    Hazelnut = " + std::to_string(shot_quantity[4]);
+    shots_string = " None = " + std::to_string(shot_quantity[0]) +
+                   ", Chocolate = " + std::to_string(shot_quantity[1]) +
+                   ", Vanilla = " + std::to_string(shot_quantity[2]) +
+                   ", Peppermint = " + std::to_string(shot_quantity[3]) +
+                   ", Hazelnut = " + std::to_string(shot_quantity[4]);
 
     return _name + " $" + std::to_string(_price) + " $" + std::to_string(_cost) +
-           "\n\tDarkeness: " + darkness_string +
-           "\n\tShots: " + shots_string;
+           "\nDarkeness: " + darkness_string +
+           ", Shots: " + shots_string;
 }

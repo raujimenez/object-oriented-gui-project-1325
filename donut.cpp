@@ -47,5 +47,5 @@ std::string Donut::to_string()
         filling_string = "Strawberry";
         break;
     }
-    return name() + " $" + std::to_string(price()) + " $" + std::to_string(cost()) + "\n\tSprinkles: " + sprinkle_string + "\n\tFilling: " + filling_string + "\n\tFrosting: " + frosting_string;
+    return name() + " $" + std::to_string(price()) + " $" + std::to_string(cost()) + ", Sprinkles: " + sprinkle_string + ", Filling: " + filling_string + ", Frosting: " + frosting_string;
 }
