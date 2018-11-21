@@ -66,6 +66,24 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     menuitem_createorder->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_create_order_click));
     createmenu->append(*menuitem_createorder);
 
+    //Process
+    Gtk::MenuItem *menuitem_process = Gtk::manage(new Gtk::MenuItem("_Process", true));
+    menubar->append(*menuitem_process);
+    Gtk::Menu *processmenu = Gtk::manage(new Gtk::Menu());
+    menuitem_process->set_submenu(*processmenu);
+    //Process: fill
+    Gtk::MenuItem *menuitem_fill = Gtk::manage(new Gtk::MenuItem("_Fill", true));
+    menuitem_fill->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_fill_click));
+    processmenu->append(*menuitem_fill);
+    //Process: pay
+    Gtk::MenuItem *menuitem_pay = Gtk::manage(new Gtk::MenuItem("_Pay", true));
+    menuitem_pay->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_pay_click));
+    processmenu->append(*menuitem_pay);
+    //Process: Discard
+    Gtk::MenuItem *menuitem_discard = Gtk::manage(new Gtk::MenuItem("_Discard", true));
+    menuitem_discard->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_discard_click));
+    processmenu->append(*menuitem_discard);
+
     //Help
     Gtk::MenuItem *menuitem_help = Gtk::manage(new Gtk::MenuItem("_Help", true));
     menubar->append(*menuitem_help);
@@ -628,4 +646,179 @@ void Mainwin::on_view_order_click()
         }
     }
 
+}
+void Mainwin::on_fill_click()
+{
+    Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Fill an Order"));
+    dialog->set_transient_for(*this);
+    std::string order_string{""};
+    Gtk::HBox disp_order;
+    Gtk::Label label_order{order_string};
+    disp_order.pack_start(label_order, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(disp_order, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_order;
+    Gtk::HBox b_order;
+    Gtk::Label l_order{"Order:"};
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+    l_order.set_width_chars(15);
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+    c_order.set_size_request(160);
+    for (auto iter : _store.orders()){
+        auto ord_cpy = iter.first;
+        c_order.append(std::to_string(ord_cpy.order_number()));
+    }
+    b_order.pack_start(c_order, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Close", 0);
+    dialog->add_button("Show", 1);
+    dialog->add_button("Fill", 2);
+    bool is_viewing = true;
+    while(is_viewing)
+    {
+        dialog->show_all();
+        int result = dialog->run();
+        if(result == 0)
+        {
+            dialog->close();
+            is_viewing = false;
+        }
+        else if (result == 1)
+        {
+            int get_order = c_order.get_active_row_number();
+            order_string = _store.order_to_string(get_order);
+            label_order.set_text(order_string);
+        }
+        else if (result == 2)
+        {
+            int get_order = c_order.get_active_row_number();
+            try{_store.fill_order(get_order);}
+            catch (std::exception &e)
+            {
+                Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
+                view_all->set_transient_for(*dialog);
+                view_all->run();
+                view_all->close();
+            }
+            result = 0;
+        }
+    }
+
+}
+void Mainwin::on_pay_click()
+{
+    Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Pay an Order"));
+    dialog->set_transient_for(*this);
+    std::string order_string{""};
+    Gtk::HBox disp_order;
+    Gtk::Label label_order{order_string};
+    disp_order.pack_start(label_order, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(disp_order, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_order;
+    Gtk::HBox b_order;
+    Gtk::Label l_order{"Order:"};
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+    l_order.set_width_chars(15);
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+    c_order.set_size_request(160);
+    for (auto iter : _store.orders()){
+        auto ord_cpy = iter.first;
+        c_order.append(std::to_string(ord_cpy.order_number()));
+    }
+    b_order.pack_start(c_order, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Close", 0);
+    dialog->add_button("Show", 1);
+    dialog->add_button("Pay", 2);
+    bool is_viewing = true;
+    while(is_viewing)
+    {
+        dialog->show_all();
+        int result = dialog->run();
+        if(result == 0)
+        {
+            dialog->close();
+            is_viewing = false;
+        }
+        else if (result == 1)
+        {
+            int get_order = c_order.get_active_row_number();
+            order_string = _store.order_to_string(get_order);
+            label_order.set_text(order_string);
+        }
+        else if (result == 2)
+        {
+            int get_order = c_order.get_active_row_number();
+            try{_store.pay_order(get_order);}
+            catch (std::exception &e)
+            {
+                Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
+                view_all->set_transient_for(*dialog);
+                view_all->run();
+                view_all->close();
+            }
+            result = 0;
+        }
+    }
+}
+void Mainwin::on_discard_click()
+{
+    Gtk::Dialog *dialog = Gtk::manage(new Gtk::Dialog("Discard an Order"));
+    dialog->set_transient_for(*this);
+    std::string order_string{""};
+    Gtk::HBox disp_order;
+    Gtk::Label label_order{order_string};
+    disp_order.pack_start(label_order, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(disp_order, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_order;
+    Gtk::HBox b_order;
+    Gtk::Label l_order{"Order:"};
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+    l_order.set_width_chars(15);
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+    c_order.set_size_request(160);
+    for (auto iter : _store.orders()){
+        auto ord_cpy = iter.first;
+        c_order.append(std::to_string(ord_cpy.order_number()));
+    }
+    b_order.pack_start(c_order, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Close", 0);
+    dialog->add_button("Show", 1);
+    dialog->add_button("Discard", 2);
+    bool is_viewing = true;
+    while(is_viewing)
+    {
+        dialog->show_all();
+        int result = dialog->run();
+        if(result == 0)
+        {
+            dialog->close();
+            is_viewing = false;
+        }
+        else if (result == 1)
+        {
+            int get_order = c_order.get_active_row_number();
+            order_string = _store.order_to_string(get_order);
+            label_order.set_text(order_string);
+        }
+        else if (result == 2)
+        {
+            int get_order = c_order.get_active_row_number();
+            try{_store.discard_order(get_order);}
+            catch (std::exception &e)
+            {
+                Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
+                view_all->set_transient_for(*dialog);
+                view_all->run();
+                view_all->close();
+            }
+            result = 0;
+        }
+    }
 }

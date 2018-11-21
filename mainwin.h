@@ -21,6 +21,9 @@ protected:
   void on_view_order_click();
   void on_about_click();
 
+  void on_fill_click();
+  void on_pay_click();
+  void on_discard_click();
 private:
   Store _store;
   Gtk::Label *msg;
