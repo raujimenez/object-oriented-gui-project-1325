@@ -39,6 +39,6 @@ std::string Java::to_string()
                    ", Hazelnut = " + std::to_string(shot_quantity[4]);
 
     return _name + " $" + std::to_string(_price) + " $" + std::to_string(_cost) +
-           "\nDarkeness: " + darkness_string +
+           ", Darkeness: " + darkness_string +
            ", Shots: " + shots_string;
 }

@@ -30,7 +30,6 @@ std::string Store::order_to_string(int order_number)
     //iter now contains point to current key
     auto cust = iter->second;
     auto ord = iter->first;
-    string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + "\n";
-    string_to_return += ord.products_to_string();
+    string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + "\n" + ord.products_to_string();
     return string_to_return;
 }
