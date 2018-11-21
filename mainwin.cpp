@@ -162,7 +162,10 @@ Mainwin::Mainwin() : _store{Store("Raul's Java and Donut Joint")}
     addcustomer->set_tooltip_markup("Add customer");
     addcustomer->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_create_customer_click));
     toolbar->append(*addcustomer);
-
+    
+    //display cash register
+    msg = Gtk::manage(new Gtk::Label(std::to_string(_store.cash())));
+    vbox->add(*msg);
     vbox->show_all();
 }
 
@@ -712,12 +715,11 @@ void Mainwin::on_fill_click()
         else if (result == 2)
         {
             int get_order = c_order.get_active_row_number();
-            try{_store.fill_order(get_order);}
+            try{_store.fill_order(get_order);dialog->close(); is_viewing = false;}
             catch (std::exception &e)
             {
-                Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
-                view_all->run();
-                view_all->close();
+                Gtk::MessageDialog view_all{e.what()};
+                view_all.run();
             }
             result = 0;
         }
@@ -770,12 +772,11 @@ void Mainwin::on_pay_click()
         else if (result == 2)
         {
             int get_order = c_order.get_active_row_number();
-            try{_store.pay_order(get_order);}
+            try{_store.pay_order(get_order); msg->set_text(std::to_string(_store.cash()));dialog->close(); is_viewing = false;}
             catch (std::exception &e)
             {
-                Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
-                view_all->run();
-                view_all->close();
+                Gtk::MessageDialog view_all{(e.what())};
+                view_all.run();
             }
             result = 0;
         }
@@ -827,12 +828,11 @@ void Mainwin::on_discard_click()
         else if (result == 2)
         {
             int get_order = c_order.get_active_row_number();
-            try{_store.discard_order(get_order);}
+            try{_store.discard_order(get_order); dialog->close(); is_viewing = false;}
             catch (std::exception &e)
             {
-                Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(e.what()));
-                view_all->run();
-                view_all->close();
+                Gtk::MessageDialog view_all{e.what()};
+                view_all.run();    
             }
             result = 0;
         }
