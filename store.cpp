@@ -2,52 +2,25 @@
 
 Store::Store(std::string name) : _name{name} {}
 
+// GETTER METHODS
 std::string Store::name() { return _name; }
-std::vector<Product *> Store::products()
-{
-    return _products;
-}
-std::vector<Customer> Store::customers()
-{
-    return _customers;
-}
-void Store::add_product(Product *product)
-{
-    _products.push_back(product);
-}
-int Store::number_of_products()
-{
-    return _products.size();
-}
+std::vector<Product *> Store::products() { return _products; }
+std::vector<Customer> Store::customers() { return _customers; }
+std::map<Order, Customer> Store::orders() { return _orders; }
 
-std::string Store::product_to_string(int product)
-{
-    return _products[product]->to_string();
-}
+//PRODUCT METHODS
+void Store::add_product(Product *product) { _products.push_back(product); }
+int Store::number_of_products(){ return _products.size(); }
+std::string Store::product_to_string(int product){ return _products[product]->to_string(); }
 
-void Store::add_customer(Customer person)
-{
-    _customers.push_back(person);
-}
-int Store::number_of_customers()
-{
-    return _customers.size();
-}
-std::string Store::customer_to_string(int customer)
-{
-    return _customers[customer].to_string();
-}
+//CUSTOMER METHODS
+void Store::add_customer(Customer person) { _customers.push_back(person); }
+int Store::number_of_customers() { return _customers.size(); }
+std::string Store::customer_to_string(int customer) { return _customers[customer].to_string(); }
 
-void Store::place_order(Order order, int customer)
-{
-    _orders[order] = _customers[customer];
-}
-
-int Store::number_of_orders()
-{
-    return _orders.size();
-}
-
+//ORDER METHODS
+void Store::place_order(Order order, int customer) { _orders[order] = _customers[customer]; }
+int Store::number_of_orders() { return _orders.size(); }
 std::string Store::order_to_string(int order_number)
 {
     std::string string_to_return{""};
@@ -62,9 +35,4 @@ std::string Store::order_to_string(int order_number)
     string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + "\n";
     string_to_return += ord.products_to_string();
     return string_to_return;
-}
-
-std::map<Order, Customer> Store::orders()
-{
-    return _orders;
 }
