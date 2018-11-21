@@ -26,11 +26,23 @@ public:
   int number_of_orders();
   std::string order_to_string(int order_number);
 
+  double cash();
+  void pay_order(int order_number);
+  bool order_is_paid(int order_number);
+  void fill_order(int order_number);
+  bool order_is_filled(int order_number);
+  void discard_order(int order_number);
+  bool order_is_discarded(int order_number);
+  bool order_is_completed(int order_number);
+  bool order_is_pending(int order_number);
+
 private:
+  double _cash;
   std::string _name;
   std::vector<Product *> _products;
   std::vector<Customer> _customers;
   std::map<Order, Customer> _orders;
+  std::map<Order, Customer>::iterator get_pair(int order_number);
 };
 
 #endif
