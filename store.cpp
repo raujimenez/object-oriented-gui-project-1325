@@ -10,8 +10,8 @@ std::map<Order, Customer> Store::orders() { return _orders; }
 
 //PRODUCT METHODS
 void Store::add_product(Product *product) { _products.push_back(product); }
-int Store::number_of_products(){ return _products.size(); }
-std::string Store::product_to_string(int product){ return _products[product]->to_string(); }
+int Store::number_of_products() { return _products.size(); }
+std::string Store::product_to_string(int product) { return _products[product]->to_string(); }
 
 //CUSTOMER METHODS
 void Store::add_customer(Customer person) { _customers.push_back(person); }
@@ -26,9 +26,7 @@ std::string Store::order_to_string(int order_number)
     std::string string_to_return{""};
     auto iter = _orders.begin();
     for (int i{0}; i < order_number; i++) //get current value in map
-    {
         iter++;
-    }
     //iter now contains point to current key
     auto cust = iter->second;
     auto ord = iter->first;
