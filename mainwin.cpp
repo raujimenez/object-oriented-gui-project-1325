@@ -151,9 +151,9 @@ void Mainwin::on_quit_click()
 }
 void Mainwin::on_view_all_click()
 {
-    std::string view_string = "List of Products from " + _store.name() + ":                                                                              \n";
+    std::string view_string = "List of Products from " + _store.name() + ":\n";
     for (int i{0}; i < _store.number_of_products(); i++)
-        view_string += _store.product_to_string(i) + "\n";
+        view_string += std::to_string(i) + ") " + _store.product_to_string(i) + "\n";
 
     Gtk::MessageDialog *view_all = Gtk::manage(new Gtk::MessageDialog(view_string));
     view_all->set_transient_for(*this);
