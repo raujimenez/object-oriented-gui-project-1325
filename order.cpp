@@ -13,8 +13,8 @@ bool Order::discarded() { return _is_discarded; }
 void Order::pay(){ if (!_is_paid && !_is_discarded) _is_paid = true; else throw std::runtime_error("Order could not be paid."); }
 void Order::fill() { if (!_is_filled && !_is_discarded) _is_filled = true; else throw std::runtime_error("Order could not be filled."); }
 void Order::discard() { if(!_is_discarded && !completed()) _is_discarded = true; else throw std::runtime_error("Order could not be discarded."); }
-bool Order::pending() { if (!_is_discarded && !_is_paid && !_is_filled) return true; throw std::runtime_error("Order is not pending.");}
-bool Order::completed() { if (_is_filled && _is_paid && !_is_discarded) return true; throw std::runtime_error("Order is not completed."); }
+bool Order::pending() { if (!_is_discarded && !_is_paid && !_is_filled) return true; return false;}
+bool Order::completed() { if (_is_filled && _is_paid && !_is_discarded) return true; return false;}
 
 //runs through products vector to get profit for each product and adds them up
 double Order::profit() { int profit{0}; for (auto i : _products) profit += i->profit(); return profit; } 
