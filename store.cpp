@@ -31,6 +31,31 @@ std::string Store::order_to_string(int order_number)
     string_to_return += cust.to_string() + ", Order#" + std::to_string(ord.order_number()) + "\n" + ord.products_to_string();
     return string_to_return;
 }
+//CHANGE THE BOOLEANS
+void Store::pay_order(int order_number){
+    auto iter = get_pair(order_number);
+    auto ord = iter->first; //use copy constructor
+    auto cust = iter->second; 
+    ord.pay();
+    _orders.erase(iter->first);
+    _orders[ord] = cust;
+}
+void Store::fill_order(int order_number){
+    auto iter = get_pair(order_number);
+    auto ord = iter->first;
+    auto cust = iter->second;
+    ord.fill();
+    _orders.erase(iter->first);
+    _orders[ord] = cust;
+}
+void Store::discard_order(int order_number){
+    auto iter = get_pair(order_number);
+    auto ord = iter->first;
+    auto cust = iter->second;
+    ord.discard();
+    _orders.erase(iter->first);
+    _orders[ord] = cust;
+}
 
 //GETTERS TO STATE MACHINE (READ-ONLY)
 bool Store::order_is_paid(int order_number)
