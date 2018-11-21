@@ -715,7 +715,7 @@ void Mainwin::on_fill_click()
         else if (result == 2)
         {
             int get_order = c_order.get_active_row_number();
-            try{_store.fill_order(get_order);dialog->close(); is_viewing = false;}
+            try{_store.fill_order(get_order); msg->set_text(std::to_string(_store.cash()));dialog->close(); is_viewing = false;}
             catch (std::exception &e)
             {
                 Gtk::MessageDialog view_all{e.what()};
